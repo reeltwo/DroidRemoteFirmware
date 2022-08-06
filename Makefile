@@ -8,6 +8,7 @@ ESP32_PARTSCHEME=min_spiffs
 ESP32_FLASHSIZE=16M
 GITHUB_REPOS= \
 reeltwo/Reeltwo \
+adafruit/Adafruit_BusIO \
 adafruit/Adafruit-GFX-Library \
 adafruit/Adafruit_SSD1306
 
