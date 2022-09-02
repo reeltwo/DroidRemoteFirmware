@@ -2,11 +2,21 @@
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 ///////////////////////////////////
+
+#if __has_include("build_version.h")
+#include "build_version.h"
+#endif
+
+#if __has_include("reeltwo_build_version.h")
+#include "reeltwo_build_version.h"
+#endif
+
+///////////////////////////////////
 // CONFIGURABLE OPTIONS
 ///////////////////////////////////
 
 #define USE_DEBUG                       // Define to enable debug diagnostic
-#define USE_SMQDEBUG
+//#define USE_SMQDEBUG
 #define SMQ_HOSTNAME                    "Remote"
 #define SMQ_SECRET                      "Astromech"
 
@@ -62,8 +72,7 @@ void setup()
 {
     REELTWO_READY();
 
-    Serial.print("Droid Remote - ");
-    Serial.println(__DATE__);
+    PrintReelTwoInfo(Serial, "Droid Remote");
 
     SetupEvent::ready();
 
@@ -81,6 +90,7 @@ void setup()
 
     SMQ::setHostLostCallback([](SMQHost* host) {
         printf("Lost: %s\n", host->getHostName().c_str());
+        sMainScreen.removeHost(host->getHostAddress());
     });
 
     Wire.begin();
@@ -129,5 +139,6 @@ void loop()
 {
     AnimatedEvent::process();
     sDisplay.process();
+    SMQ::process();
 }
 #pragma GCC diagnostic pop

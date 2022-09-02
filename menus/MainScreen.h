@@ -21,7 +21,6 @@ public:
     {
         if (fCurrentItem != fCurrentDisplayItem)
         {
-            printf("render.fCurrentItem: %s\n", fCurrentItem.c_str());
             sDisplay.invertDisplay(false);
             sDisplay.clearDisplay();
             sDisplay.setTextSize(2);
@@ -74,13 +73,35 @@ public:
         }
         fTail = host;
         fCurrentDisplayItem = "dummy";
-        printf("addHost.fCurrentItem : %s\n", fCurrentItem.c_str());
+        restoreScreen();
     }
 
     void removeHost(String addr)
     {
-        // TODO
-        printf("TODO REMOVE HOST : %s\n", addr.c_str());
+        Host* host;
+        Host* prev = nullptr;
+        Host** hostp = &fHead;
+        while ((host = *hostp) != nullptr)
+        {
+            if (host->fAddr == addr)
+            {
+                *hostp = host->fNext;
+                if (host->fNext == nullptr)
+                    fTail = prev;
+                delete host;
+            }
+            else
+            {
+                hostp = &host->fNext;
+            }
+            prev = host;
+        }
+        if (fCurrentDisplayItem == addr)
+        {
+            fCurrentDisplayItem = "dummy";
+            sDisplay.switchToScreen(kMainScreen);
+            restoreScreen();
+        }
     }
 
 protected:
@@ -139,7 +160,7 @@ protected:
     {
         for (Host* host = fHead; host != nullptr; host = host->fNext)
         {
-            printf("getHostName addr=%s host->fAddr=%s\n", addr.c_str(), host->fAddr.c_str());
+            // printf("getHostName addr=%s host->fAddr=%s\n", addr.c_str(), host->fAddr.c_str());
             if (host->fAddr == addr)
                 return true;
         }
@@ -150,7 +171,7 @@ protected:
     {
         for (Host* host = fHead; host != nullptr; host = host->fNext)
         {
-            printf("getHostName addr=%s host->fAddr=%s\n", addr.c_str(), host->fAddr.c_str());
+            // printf("getHostName addr=%s host->fAddr=%s\n", addr.c_str(), host->fAddr.c_str());
             if (host->fAddr == addr)
                 return host->fName;
         }

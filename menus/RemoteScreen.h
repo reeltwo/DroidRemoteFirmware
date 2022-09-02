@@ -100,6 +100,7 @@ public:
     }
     virtual void buttonDial(long newValue, long oldValue = 0)
     {
+        printf("dial new=%ld [%ld]\n", newValue, oldValue);
         if (SMQ::sendTopic("DIAL"))
         {
             SMQ::send_long("new", newValue);
