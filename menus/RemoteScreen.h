@@ -100,7 +100,6 @@ public:
     }
     virtual void buttonDial(long newValue, long oldValue = 0)
     {
-        printf("dial new=%ld [%ld]\n", newValue, oldValue);
         if (SMQ::sendTopic("DIAL"))
         {
             SMQ::send_long("new", newValue);
@@ -109,7 +108,8 @@ public:
         }
         else
         {
-            printf("FAILE TO SEND DIAL\n");
+            // Ignore
+            // printf("FAILED TO SEND DIAL\n");
         }
     }
 
@@ -125,7 +125,8 @@ protected:
         }
         else
         {
-            printf("FAILE TO SEND BUTTON\n");
+            // Ignore
+            // printf("FAILED TO SEND BUTTON\n");
         }
     }
 
