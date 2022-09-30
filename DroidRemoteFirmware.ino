@@ -52,10 +52,14 @@ enum ScreenID
     kRemoteScreen = 2
 };
 
-#include "menus/CommandScreen.h"
-#include "menus/CommandScreenHandlerSSD1306.h"
-
-CommandScreenHandlerSSD1306 sDisplay(sPinManager);
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include "menus/CommandScreenDisplay.h"
+Adafruit_SSD1306 sLCD(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+CommandScreenDisplay<Adafruit_SSD1306> sDisplay(sLCD, sPinManager, []() {
+    sDisplay.setEnabled(sLCD.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS));
+    return sDisplay.isEnabled();
+});
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -110,9 +114,9 @@ void setup()
 
     Wire.beginTransmission(SCREEN_ADDRESS);
     Wire.endTransmission();
-    sDisplay.setEnabled(sDisplay.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS));
-    if (sDisplay.isEnabled())
+    if (sDisplay.begin())
     {
+        printf("ENABLED\n");
         sDisplay.invertDisplay(false);
         sDisplay.clearDisplay();
         sDisplay.setRotation(2);
